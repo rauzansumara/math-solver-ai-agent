@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { ArrowUp, X, FileText, Image as ImageIcon, Calculator, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,10 +25,22 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isDragOver, setIsDragOver] = useState(false);
 
+    // Debug: Log when files state actually changes
+    useEffect(() => {
+        console.log("Current files state:", files);
+    }, [files]);
+
     const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
         console.log("File select triggered", e.target.files);
-        if (e.target.files) {
-            setFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
+        if (e.target.files && e.target.files.length > 0) {
+            const newFiles = Array.from(e.target.files);
+            setFiles((prev) => {
+                const updated = [...prev, ...newFiles];
+                console.log("Setting files to:", updated);
+                return updated;
+            });
+            // Reset input so the same file can be selected again if needed
+            e.target.value = "";
         }
     };
 
