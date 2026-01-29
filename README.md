@@ -5,7 +5,15 @@
 *   **Multimodal Input**: Upload images or PDFs to get context-aware solutions.
 *   **LaTeX Support**: Beautifully rendered mathematical equations using KaTeX.
 *   **Smart History**: Automatically saves your conversation history (requires Google Login).
-*   **Flexible AI Backend**: Connects to any OpenAI-compatible API (like Ollama) for privacy-focused or cloud-based inference.
+*   **Flexible AI Backend**: Connects to any OpenAI-compatible API (like Ollama Cloud) for privacy-focused or cloud-based inference.
+*   **Built on Free Infrastructure**: Designed to run entirely on the Vercel Hobby plan + free tier AI providers.
+
+## 🚀 Features at a Glance
+
+*   **⚡ Zero-Cost Deployment**: Optimized for Vercel's serverless environment.
+*   **📄 PDF & Image Parsing**: Drag-and-drop support for analyzing documents and diagrams.
+*   **🧮 Math Formulas**: Native `KaTeX` rendering and a custom "Math Keyboard" for easy input.
+*   **💾 Cloud Sync**: Chat history persists across devices (via Google Auth + LocalStorage fallback).
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
