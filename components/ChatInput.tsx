@@ -40,15 +40,19 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const handleSubmit = async () => {
         if ((!input.trim() && files.length === 0) || disabled) return;
 
-        const success = await onSend(input, files);
+        // Capture current values
+        const currentInput = input;
+        const currentFiles = files;
 
-        if (success) {
-            setInput("");
-            setFiles([]);
-            if (textareaRef.current) {
-                textareaRef.current.style.height = "auto";
-            }
+        // Optimistically clear UI immediately
+        setInput("");
+        setFiles([]);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
         }
+
+        // Send (fire and forget from UI perspective, handled by parent)
+        await onSend(currentInput, currentFiles);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
