@@ -1,8 +1,8 @@
 "use client";
 
-import { Clock, Plus, Settings, LogOut, PanelLeftClose, SquarePen } from "lucide-react";
+import { Clock, Plus, Settings, LogOut, PanelLeftClose, SquarePen, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { signOut } from "next-auth/react";
+import { signOut, useSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -35,6 +35,7 @@ export function Sidebar({
     onDeleteChat,
     onNewChat
 }: SidebarProps) {
+    const { status } = useSession();
 
     // Internal component to share layout logic
     const SidebarContent = ({ isMobile = false }) => (
@@ -114,14 +115,25 @@ export function Sidebar({
 
             {/* Footer */}
             <div className="p-3 m-3 mt-auto bg-muted/20 border border-border/40 rounded-xl space-y-1">
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 h-9 px-3 font-normal text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    onClick={() => signOut()}
-                >
-                    <LogOut className="h-4 w-4 opacity-70" />
-                    Sign out
-                </Button>
+                {status === "authenticated" ? (
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-3 h-9 px-3 font-normal text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => signOut()}
+                    >
+                        <LogOut className="h-4 w-4 opacity-70" />
+                        Sign out
+                    </Button>
+                ) : (
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-3 h-9 px-3 font-normal text-muted-foreground hover:text-primary hover:bg-primary/10"
+                        onClick={() => signIn("google")}
+                    >
+                        <LogIn className="h-4 w-4 opacity-70" />
+                        Sign In
+                    </Button>
+                )}
             </div>
         </div>
     );
