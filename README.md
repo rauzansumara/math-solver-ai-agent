@@ -1,3 +1,13 @@
+# Math Solver Based on AI Agent
+
+**Math Solver AI** is an intelligent research assistant designed to help users solve complex mathematical problems. Built with **Next.js 16** and **Tailwind CSS**, it features a modern, responsive chat interface that supports:
+
+*   **Multimodal Input**: Upload images or PDFs to get context-aware solutions.
+*   **LaTeX Support**: Beautifully rendered mathematical equations using KaTeX.
+*   **Smart History**: Automatically saves your conversation history (requires Google Login).
+*   **Flexible AI Backend**: Connects to any OpenAI-compatible API (like Ollama) for privacy-focused or cloud-based inference.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
