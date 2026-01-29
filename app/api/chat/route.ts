@@ -17,7 +17,7 @@ const ollama = new Ollama({
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
 
-    // NOTE: You can uncomment this to enforce auth. 
+    // NOTE: Uncomment this to enforce auth. 
     // For now allowing testing without full auth setup if env vars are missing.
     // if (!session) {
     //   return new NextResponse("Unauthorized", { status: 401 });
