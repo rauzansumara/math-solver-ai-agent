@@ -6,6 +6,7 @@ import { Ollama } from "ollama";
 
 // Ensure Node.js runtime for pdf-parse
 export const runtime = "nodejs";
+export const maxDuration = 60; // Set max duration to 60 seconds (Vercel Hobby limit)
 
 const ollama = new Ollama({
     host: process.env.OLLAMA_BASE_URL || "https://ollama.com",
@@ -77,8 +78,19 @@ export async function POST(req: Request) {
         });
 
         return new NextResponse(stream);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in chat route:", error);
-        return new NextResponse("Internal Error", { status: 500 });
+
+        // Detailed logging for debugging Vercel issues
+        if (error.cause) console.error("Error cause:", error.cause);
+        if (error.message) console.error("Error message:", error.message);
+
+        return new NextResponse(
+            JSON.stringify({
+                error: "Internal Server Error",
+                details: error.message
+            }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
     }
 }
