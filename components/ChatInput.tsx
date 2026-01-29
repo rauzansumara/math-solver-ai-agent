@@ -148,6 +148,12 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
     return (
         <div className="w-full flex flex-col items-center">
+            {/* DEBUG OVERLAY */}
+            <div className="w-full max-w-3xl bg-red-100 border-2 border-red-500 text-red-600 p-2 mb-2 rounded font-mono text-xs">
+                DEBUG MODE: Files Count: {files.length}
+                <br />
+                Files: {files.map(f => f.name).join(", ") || "None"}
+            </div>
             {/* Input Box Wrapper - Floating Card Style */}
             <div className={cn(
                 "w-full max-w-3xl relative rounded-2xl border bg-background/80 backdrop-blur-xl shadow-lg transition-all duration-300 ease-out",
