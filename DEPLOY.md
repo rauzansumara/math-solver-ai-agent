@@ -26,5 +26,17 @@ Vercel is the best place to host the Next.js frontend. However, **Vercel cannot 
     *   **Authorized redirect URIs**: ADD the callback URL (e.g., `https://math-solver-ai-agent.vercel.app/api/auth/callback/google`).
     *   Click **Save**.
 
-**Important**: If running Ollama on a local PC, use a tool like **Ngrok** to provide a public URL for Vercel connectivity.
-Example: `ngrok http 11434` -> Use the resulting URL as the `OLLAMA_BASE_URL`.
+**Important**: The `OLLAMA_BASE_URL` should point to a public endpoint (e.g., `https://api.ollama.com` or your own server).
+ 
+## Troubleshooting & Known Issues
+
+### 1. "Something went wrong" (Timeouts)
+Large models (like `gpt-oss:120b`) can take >10s to start replying, which hits Vercel's default timeout.
+*   **Fix**: This project sets `maxDuration = 60` in `app/api/chat/route.ts` to allow 60-second responses on Vercel Hobby/Pro.
+
+### 2. PDF Parsing Crashes (`DOMMatrix` / `Canvas`)
+Serverless environments lack browser APIs (`DOMMatrix`, `Path2D`) used by PDF libraries.
+*   **Fix**: This project includes custom polyfills in `lib/polyfill.ts` and `lib/pdf.ts`. A specific `npm install @napi-rs/canvas` dependency handles backend canvas rendering.
+
+### 3. Image Attachments "Disappearing"
+*   **Fix**: Images are now converted to Base64 in the frontend and persisted in the local chat state immediately to ensure they stay visible even if the backend is slow.
