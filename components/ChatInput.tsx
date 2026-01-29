@@ -26,6 +26,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const [isDragOver, setIsDragOver] = useState(false);
 
     const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log("File select triggered", e.target.files);
         if (e.target.files) {
             setFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
         }
@@ -69,22 +70,36 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragOver(false);
+        console.log("Drop event", e.dataTransfer.files);
+
         const droppedFiles = Array.from(e.dataTransfer.files).filter(file =>
             file.type.startsWith('image/') || file.type === 'application/pdf'
         );
+
         if (droppedFiles.length > 0) {
             setFiles(prev => [...prev, ...droppedFiles]);
+        } else {
+            console.warn("No valid files dropped (checked image/* and application/pdf)");
         }
     };
 
     const handlePaste = (e: React.ClipboardEvent) => {
+        console.log("Paste event triggered");
         const items = e.clipboardData.items;
         const pastedFiles: File[] = [];
 
+        console.log("Clipboard items:", items.length);
+
         for (let i = 0; i < items.length; i++) {
+            console.log(`Item ${i}: type=${items[i].type}, kind=${items[i].kind}`);
             if (items[i].type.indexOf("image") !== -1) {
                 const file = items[i].getAsFile();
-                if (file) pastedFiles.push(file);
+                if (file) {
+                    console.log("File extracted:", file.name);
+                    pastedFiles.push(file);
+                } else {
+                    console.error("Failed to get file from item");
+                }
             }
         }
 

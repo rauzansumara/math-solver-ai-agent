@@ -22,3 +22,20 @@ if (typeof global.ImageData === "undefined") {
         data: Uint8ClampedArray;
     };
 }
+// Polyfill Path2D to prevent rendering warnings
+if (typeof global.Path2D === "undefined") {
+    // @ts-ignore
+    global.Path2D = class Path2D {
+        constructor() { }
+        addPath() { }
+        closePath() { }
+        moveTo() { }
+        lineTo() { }
+        bezierCurveTo() { }
+        quadraticCurveTo() { }
+        arc() { }
+        arcTo() { }
+        ellipse() { }
+        rect() { }
+    };
+}
