@@ -22,6 +22,7 @@ const ModeToggle = dynamic(() => import("./mode-toggle").then((mod) => mod.ModeT
 interface ChatMessage {
     role: "user" | "assistant";
     content: string;
+    images?: string[]; // Base64 images
 }
 
 interface ChatSession {
@@ -114,8 +115,25 @@ export function MathSolverApp() {
             return false;
         }
 
-        // Optimistic Update
-        const newUserMsg: ChatMessage = { role: "user", content: text };
+        // Process Files to Base64
+        const processedFiles = await Promise.all(attachments.map(async (file) => {
+            return new Promise<{ type: string; name: string; data: string }>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = (reader.result as string).split(',')[1];
+                    resolve({ type: file.type, name: file.name, data: base64 });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }));
+
+        // Optimistic Update (Include images)
+        const newUserMsg: ChatMessage = {
+            role: "user",
+            content: text,
+            images: processedFiles.filter(f => f.type.startsWith('image')).map(f => f.data) // Store images for display
+        };
         const updatedMsgs = [...currentMessages, newUserMsg];
         setCurrentMessages(updatedMsgs);
         setIsLoading(true);
@@ -134,7 +152,7 @@ export function MathSolverApp() {
             activeChatId = newChat.id;
             setCurrentChatId(newChat.id);
         } else {
-            // Update existing chat title/preview if it's the first message
+            // Update existing chat
             setChats(prev => prev.map(c => {
                 if (c.id === activeChatId) {
                     return {
@@ -150,18 +168,6 @@ export function MathSolverApp() {
         }
 
         try {
-            // Process Files
-            const processedFiles = await Promise.all(attachments.map(async (file) => {
-                return new Promise<{ type: string; name: string; data: string }>((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const base64 = (reader.result as string).split(',')[1];
-                        resolve({ type: file.type, name: file.name, data: base64 });
-                    };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-            }));
 
             const response = await fetch("/api/chat", {
                 method: "POST",

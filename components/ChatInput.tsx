@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { ArrowUp, X, FileText, Image as ImageIcon, Calculator, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,23 +25,12 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isDragOver, setIsDragOver] = useState(false);
 
-    // Debug: Log when files state actually changes
-    useEffect(() => {
-        console.log("Current files state:", files);
-    }, [files]);
-
     const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log("File select triggered", e.target.files);
-        if (e.target.files && e.target.files.length > 0) {
-            const newFiles = Array.from(e.target.files);
-            setFiles((prev) => {
-                const updated = [...prev, ...newFiles];
-                console.log("Setting files to:", updated);
-                return updated;
-            });
-            // Reset input so the same file can be selected again if needed
-            e.target.value = "";
+        if (e.target.files) {
+            setFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
         }
+        // Reset input
+        e.target.value = "";
     };
 
     const removeFile = (index: number) => {
@@ -82,36 +71,23 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragOver(false);
-        console.log("Drop event", e.dataTransfer.files);
-
         const droppedFiles = Array.from(e.dataTransfer.files).filter(file =>
             file.type.startsWith('image/') || file.type === 'application/pdf'
         );
 
         if (droppedFiles.length > 0) {
             setFiles(prev => [...prev, ...droppedFiles]);
-        } else {
-            console.warn("No valid files dropped (checked image/* and application/pdf)");
         }
     };
 
     const handlePaste = (e: React.ClipboardEvent) => {
-        console.log("Paste event triggered");
         const items = e.clipboardData.items;
         const pastedFiles: File[] = [];
 
-        console.log("Clipboard items:", items.length);
-
         for (let i = 0; i < items.length; i++) {
-            console.log(`Item ${i}: type=${items[i].type}, kind=${items[i].kind}`);
             if (items[i].type.indexOf("image") !== -1) {
                 const file = items[i].getAsFile();
-                if (file) {
-                    console.log("File extracted:", file.name);
-                    pastedFiles.push(file);
-                } else {
-                    console.error("Failed to get file from item");
-                }
+                if (file) pastedFiles.push(file);
             }
         }
 
@@ -148,12 +124,6 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
     return (
         <div className="w-full flex flex-col items-center">
-            {/* DEBUG OVERLAY */}
-            <div className="w-full max-w-3xl bg-red-100 border-2 border-red-500 text-red-600 p-2 mb-2 rounded font-mono text-xs">
-                DEBUG MODE: Files Count: {files.length}
-                <br />
-                Files: {files.map(f => f.name).join(", ") || "None"}
-            </div>
             {/* Input Box Wrapper - Floating Card Style */}
             <div className={cn(
                 "w-full max-w-3xl relative rounded-2xl border bg-background/80 backdrop-blur-xl shadow-lg transition-all duration-300 ease-out",

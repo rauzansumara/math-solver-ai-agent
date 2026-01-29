@@ -14,7 +14,7 @@ interface MessageProps {
     content: string;
 }
 
-export function Message({ role, content }: MessageProps) {
+export function Message({ role, content, images }: MessageProps & { images?: string[] }) {
     const isUser = role === "user";
 
     return (
@@ -41,6 +41,16 @@ export function Message({ role, content }: MessageProps) {
                     <div className={cn("prose prose-sm max-w-none break-words leading-7",
                         isUser ? "prose-invert text-primary-foreground" : "dark:prose-invert"
                     )}>
+                        {/* Render Images if present */}
+                        {images && images.map((img, i) => (
+                            <img
+                                key={i}
+                                src={`data:image/png;base64,${img}`}
+                                alt="Attachment"
+                                className="rounded-lg max-w-full mb-3 shadow-sm border border-white/10"
+                            />
+                        ))}
+
                         <ReactMarkdown
                             remarkPlugins={[remarkMath]}
                             rehypePlugins={[rehypeKatex]}

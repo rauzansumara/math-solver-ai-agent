@@ -9,6 +9,7 @@ import { Calculator } from "lucide-react";
 interface ChatMessage {
     role: "user" | "assistant";
     content: string;
+    images?: string[];
 }
 
 interface ChatAreaProps {
@@ -47,7 +48,7 @@ export function ChatArea({ messages, onSendMessage, isLoading }: ChatAreaProps) 
             <ScrollArea className="flex-1 px-4">
                 <div className="max-w-3xl mx-auto py-4">
                     {messages.map((msg, i) => (
-                        <Message key={i} role={msg.role} content={msg.content} />
+                        <Message key={i} role={msg.role} content={msg.content} images={msg.images} />
                     ))}
                     {isLoading && (
                         <div className="flex items-center gap-2 py-4 text-muted-foreground animate-pulse">
