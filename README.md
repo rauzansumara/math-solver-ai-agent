@@ -15,8 +15,12 @@
 *   **🧮 Math Formulas**: Native `KaTeX` rendering and a custom "Math Keyboard" for easy input.
 *   **💾 Cloud Sync**: Chat history persists across devices (via Google Auth + LocalStorage fallback).
 
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Demo Link 
+
+It’s open for anyone to try. Check it out and let me know what you think!
+Live Demo: https://lnkd.in/dSgHyFbw
 
 ## Getting Started
 
